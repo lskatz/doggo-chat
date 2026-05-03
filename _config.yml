@@ -1,7 +1,7 @@
 title: Doggo Chat
 description: Adopt, customize, and care for a virtual dog.
-url: ""
-baseurl: ""
+url: "https://lskatz.github.io"
+baseurl: "/doggo-chat"
 
 # Build settings
 markdown: kramdown

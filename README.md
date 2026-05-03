@@ -1,4 +1,4 @@
-# Doggo Chat
+# Doggo Chat 
 
 A virtual-pet game for kids, served as a static site on GitHub Pages.
 Adopt a dog, customize them, and care for them through button-driven

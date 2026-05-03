@@ -1,0 +1,68 @@
+# Breed presets. Customize freely.
+# `defaults` are starting values when this breed is picked; user can override.
+# `body_type` drives SVG body shape: stocky | slim | round
+# `default_size` and `default_fur` are starter picks: small/medium/large, short/medium/long
+# `temperament_hints` are optional personality biases (not enforced).
+
+- id: golden_retriever
+  name: Golden Retriever
+  body_type: stocky
+  default_size: large
+  default_fur: long
+  default_ears: floppy
+  default_tail: straight
+  temperament_hints: [friendly, playful]
+
+- id: corgi
+  name: Corgi
+  body_type: stocky
+  default_size: small
+  default_fur: medium
+  default_ears: perky
+  default_tail: bobbed
+  temperament_hints: [energetic, friendly]
+
+- id: dachshund
+  name: Dachshund
+  body_type: slim
+  default_size: small
+  default_fur: short
+  default_ears: floppy
+  default_tail: straight
+  temperament_hints: [playful, anxious]
+
+- id: husky
+  name: Husky
+  body_type: slim
+  default_size: large
+  default_fur: long
+  default_ears: perky
+  default_tail: curly
+  temperament_hints: [energetic, playful]
+
+- id: poodle
+  name: Poodle
+  body_type: slim
+  default_size: medium
+  default_fur: long
+  default_ears: floppy
+  default_tail: straight
+  temperament_hints: [friendly, lazy]
+
+- id: shiba
+  name: Shiba Inu
+  body_type: stocky
+  default_size: medium
+  default_fur: medium
+  default_ears: perky
+  default_tail: curly
+  temperament_hints: [shy, playful]
+
+- id: mutt
+  name: Mixed Breed
+  body_type: round
+  default_size: medium
+  default_fur: medium
+  default_ears: semi_erect
+  default_tail: straight
+  temperament_hints: [friendly]

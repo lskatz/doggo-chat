@@ -1,0 +1,53 @@
+# Coat base colors and markings palette. Each gets a hex value.
+
+coat_colors:
+  - id: golden
+    name: Golden
+    hex: "#E0AE6F"
+  - id: black
+    name: Black
+    hex: "#2B2B2B"
+  - id: white
+    name: White
+    hex: "#F5EFE6"
+  - id: chocolate
+    name: Chocolate
+    hex: "#5B3A29"
+  - id: cream
+    name: Cream
+    hex: "#EFD9B4"
+  - id: gray
+    name: Gray
+    hex: "#9CA0A8"
+  - id: red
+    name: Red
+    hex: "#B5532A"
+
+markings:
+  - id: solid
+    name: Solid
+  - id: spots
+    name: Spots
+  - id: patches
+    name: Patches
+  - id: brindle
+    name: Brindle
+  - id: tuxedo
+    name: Tuxedo (white chest)
+
+eye_colors:
+  - id: brown
+    name: Brown
+    hex: "#3E2A1A"
+  - id: amber
+    name: Amber
+    hex: "#A0691A"
+  - id: blue
+    name: Blue
+    hex: "#3E78D6"
+  - id: green
+    name: Green
+    hex: "#5C8A4F"
+  - id: hazel
+    name: Hazel
+    hex: "#7A5A2C"

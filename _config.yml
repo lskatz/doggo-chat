@@ -1,0 +1,26 @@
+title: Doggo Chat
+description: Adopt, customize, and care for a virtual dog.
+url: ""
+baseurl: ""
+
+# Build settings
+markdown: kramdown
+permalink: pretty
+
+# Files Jekyll should not include in the built site
+exclude:
+  - scripts/
+  - tests/
+  - pyproject.toml
+  - README.md
+  - .github/
+  - .gitignore
+  - vendor/
+  - Gemfile
+  - Gemfile.lock
+
+# Files Jekyll should not run Liquid templating on (avoids breaking the
+# generated JS modules that use {} braces).
+keep_files:
+  - assets/js/data.js
+  - assets/js/sounds.js

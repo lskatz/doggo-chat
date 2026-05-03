@@ -1,0 +1,53 @@
+# Wearable items. `slot` controls layering; one item per slot.
+# Colors are CSS hex; a `palette` of "any" means user picks.
+
+collars:
+  - id: none
+    name: No Collar
+  - id: classic_red
+    name: Classic Red
+    color: "#D6453E"
+  - id: bandana_blue
+    name: Blue Bandana
+    color: "#3E78D6"
+    style: bandana
+  - id: leather_brown
+    name: Leather
+    color: "#7A4E2C"
+  - id: sparkle_pink
+    name: Sparkly Pink
+    color: "#E96AAC"
+    style: sparkle
+
+clothes:
+  - id: none
+    name: No Clothes
+  - id: sweater_yellow
+    name: Yellow Sweater
+    color: "#F2C24B"
+  - id: raincoat_yellow
+    name: Yellow Raincoat
+    color: "#F2C24B"
+  - id: tutu_pink
+    name: Pink Tutu
+    color: "#FFB3CB"
+  - id: bowtie_black
+    name: Bowtie
+    color: "#1A1A1A"
+    slot_override: neck
+
+tricks:
+  - id: sit
+    name: Sit
+  - id: shake
+    name: Shake
+  - id: rollover
+    name: Roll Over
+  - id: spin
+    name: Spin
+  - id: speak
+    name: Speak
+  - id: play_dead
+    name: Play Dead
+  - id: high_five
+    name: High Five

@@ -98,8 +98,8 @@ function renderLegs(cx, cy, scale, color) {
   `;
 }
 
-function renderTail(cx, cy, scale, color, tailStyle, mood) {
-  const wag = (mood === 'happy' || mood === 'okay') ? 'tail-wag' : '';
+function renderTail(cx, cy, scale, color, tailStyle, mood, asleep) {
+  const wag = (!asleep && (mood === 'happy' || mood === 'okay')) ? 'tail-wag' : '';
   const tx = cx + 65 * scale, ty = cy - 10 * scale;
   let path;
   if (tailStyle === 'curly') {
@@ -207,9 +207,10 @@ function renderTuxedo(cx, cy, scale) {
 /**
  * Render the dog scene as an SVG string.
  * @param {object} dog — customization config (matches save.dog).
- * @param {object} opts — { mood, asleep, includeRoom }
+ * @param {object} opts — { mood, asleep, includeRoom, activity }
+ *   activity: one of 'fetch' | 'eat' | 'pet' | 'outside' | 'wake' | null
  */
-export function renderDogScene(dog, { mood = 'okay', asleep = false, includeRoom = true } = {}) {
+export function renderDogScene(dog, { mood = 'okay', asleep = false, includeRoom = true, activity = null } = {}) {
   const breed = breedOf(dog.breed);
   const body = BODY_TYPES[breed.body_type] || BODY_TYPES.round;
   const scale = SIZE_SCALE[dog.size] || 1;
@@ -228,22 +229,44 @@ export function renderDogScene(dog, { mood = 'okay', asleep = false, includeRoom
   const tuxedo = dog.markings === 'tuxedo' ? renderTuxedo(cx, cy, scale) : '';
   const head = `<circle cx="${headX}" cy="${headY}" r="${42 * scale}" fill="${baseColor}"/>`;
 
-  const wagClass = (mood === 'happy') ? 'happy-bounce' : '';
+  const wagClass = (!asleep && mood === 'happy') ? 'happy-bounce' : '';
+
+  // Determine the dog group animation class.
+  let dogGroupClass;
+  if (asleep) {
+    dogGroupClass = 'sleep-breathe';
+  } else if (activity) {
+    dogGroupClass = `activity-${activity}`;
+  } else {
+    dogGroupClass = wagClass;
+  }
 
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${VIEW_W} ${VIEW_H}" preserveAspectRatio="xMidYMid meet">
     <defs>
       <style>
         .tail-wag { transform-origin: ${cx + 65 * scale}px ${cy - 10 * scale}px; animation: tail-wag 0.6s ease-in-out infinite; }
         .happy-bounce { animation: happy-bounce 0.8s ease-in-out infinite; }
+        .sleep-breathe { animation: sleep-breathe 3s ease-in-out infinite; }
+        .activity-fetch { animation: activity-fetch 0.45s ease-in-out 3; }
+        .activity-eat { animation: activity-eat 0.4s ease-in-out 4; }
+        .activity-pet { animation: activity-pet 0.5s ease-in-out 3; }
+        .activity-outside { animation: activity-outside 0.55s ease-in-out 2; }
+        .activity-wake { animation: activity-wake 0.9s ease-out 1 forwards; }
         @keyframes tail-wag { 0%, 100% { transform: rotate(-12deg); } 50% { transform: rotate(12deg); } }
         @keyframes happy-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+        @keyframes sleep-breathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+        @keyframes activity-fetch { 0%, 100% { transform: translateX(0) rotate(0deg); } 25% { transform: translateX(-6px) rotate(-4deg); } 75% { transform: translateX(6px) rotate(4deg); } }
+        @keyframes activity-eat { 0%, 100% { transform: translateY(0); } 35% { transform: translateY(4px); } 65% { transform: translateY(2px); } }
+        @keyframes activity-pet { 0%, 100% { transform: rotate(0deg); } 30% { transform: rotate(-3deg); } 70% { transform: rotate(3deg); } }
+        @keyframes activity-outside { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-8px); } 70% { transform: translateY(-4px); } }
+        @keyframes activity-wake { 0% { transform: scale(1) translateY(0); } 35% { transform: scale(1.06) translateY(-6px); } 65% { transform: scale(0.98) translateY(2px); } 100% { transform: scale(1) translateY(0); } }
       </style>
     </defs>
     ${room}
     ${bed}
-    <g class="${wagClass}">
+    <g class="${dogGroupClass}">
       ${renderLegs(cx, cy, scale, baseColor)}
-      ${renderTail(cx, cy, scale, baseColor, dog.tail, mood)}
+      ${renderTail(cx, cy, scale, baseColor, dog.tail, mood, asleep)}
       ${bodyShape}
       ${tuxedo}
       ${renderClothes(cx, cy, scale, dog.clothes)}

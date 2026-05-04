@@ -167,11 +167,11 @@ function showCustomize() {
       const swatch = getColor ? `<span class="swatch" style="background:${getColor(it)}"></span>` : '';
       return `<button class="chip" aria-pressed="${it.id === currentId}" data-id="${it.id}">${swatch}${escapeHtml(it.name)}</button>`;
     }).join('');
-    c.addEventListener('click', e => {
+    c.onclick = e => {
       const btn = e.target.closest('.chip');
       if (!btn) return;
       setter(btn.dataset.id);
-    });
+    };
   };
 
   const renderToggleChips = (containerId, items, selectedSet, setter) => {
@@ -179,11 +179,11 @@ function showCustomize() {
     c.innerHTML = items.map(it =>
       `<button class="chip" aria-pressed="${selectedSet.has(it.id)}" data-id="${it.id}">${escapeHtml(it.name)}</button>`
     ).join('');
-    c.addEventListener('click', e => {
+    c.onclick = e => {
       const btn = e.target.closest('.chip');
       if (!btn) return;
       setter(btn.dataset.id);
-    });
+    };
   };
 
   const renderAllChips = () => {
@@ -287,6 +287,11 @@ function showPlay() {
   });
 
   renderPlayScreen();
+  document.getElementById('actions').addEventListener('click', e => {
+    const btn = e.target.closest('.action-btn');
+    if (!btn || btn.disabled) return;
+    onActionClick(btn.dataset.action);
+  });
   startTickLoop();
   Sound.playMusic('music/idle');
 }
@@ -360,12 +365,6 @@ function renderActions() {
     `;
   }).join('');
   panel.innerHTML = groups;
-
-  panel.addEventListener('click', e => {
-    const btn = e.target.closest('.action-btn');
-    if (!btn || btn.disabled) return;
-    onActionClick(btn.dataset.action);
-  });
 }
 
 function onActionClick(actionId) {

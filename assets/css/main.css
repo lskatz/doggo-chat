@@ -335,6 +335,13 @@ button {
 .stat-fill.warn { background: var(--sun); }
 .stat-fill.crit { background: var(--tomato); }
 
+.stat-hint {
+  margin-top: var(--s-2);
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
 /* The bladder bar inverts: full means urgency. Use a different warning style. */
 .stat[data-stat="bladder"] .stat-fill {
   background: var(--moss);

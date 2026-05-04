@@ -20,7 +20,21 @@ let tickInterval = null;
 
 const root = () => document.getElementById('screen-root');
 
-// ----- Screen routing -------------------------------------------------------
+// Maps action IDs to activity animation types for the dog renderer.
+const ACTIVITY_ANIMATION = {
+  pet: 'pet',
+  brush: 'pet',
+  feed: 'eat',
+  water: 'eat',
+  treat: 'eat',
+  fetch: 'fetch',
+  wake: 'wake',
+  outside: 'outside',
+};
+
+let currentActivity = null;
+let activityTimer = null;
+
 
 function showTitle() {
   stopTickLoop();
@@ -316,6 +330,9 @@ function renderStatsPanel() {
     const meta = Stats.STAT_META[name];
     const v = Math.round(state.stats[name]);
     const cls = Stats.classify(name, v);
+    const hint = (name === 'energy' && v < 40 && !state.asleep)
+      ? '<div class="stat-hint">💤 Use Sleep to recharge</div>'
+      : '';
     // For bladder, display as fullness (high = bad). For others, show as is.
     return `
       <div class="stat" data-stat="${name}">
@@ -324,6 +341,7 @@ function renderStatsPanel() {
           <span>${v}</span>
         </div>
         <div class="stat-bar"><div class="stat-fill ${cls === 'good' ? '' : cls}" style="width:${v}%"></div></div>
+        ${hint}
       </div>
     `;
   }).join('');
@@ -333,7 +351,7 @@ function renderScene() {
   const scene = document.getElementById('scene');
   if (!scene) return;
   const mood = Stats.moodFrom(state.stats);
-  scene.innerHTML = renderDogScene(state.dog, { mood, asleep: state.asleep });
+  scene.innerHTML = renderDogScene(state.dog, { mood, asleep: state.asleep, activity: currentActivity });
 
   // Speech bubble overlay
   if (state.lastReaction) {
@@ -380,6 +398,17 @@ function onActionClick(actionId) {
   if (action.setsAsleep) Sound.playMusic('music/sleep');
   if (action.clearsAsleep) Sound.playMusic('music/idle');
   if (actionId === 'fetch') Sound.playMusic('music/play');
+
+  // Set activity animation and clear it after the animation finishes.
+  if (activityTimer) clearTimeout(activityTimer);
+  currentActivity = ACTIVITY_ANIMATION[actionId] || null;
+  if (currentActivity) {
+    activityTimer = setTimeout(() => {
+      currentActivity = null;
+      renderScene();
+    }, 2000);
+  }
+
   renderPlayScreen();
 }
 
@@ -422,6 +451,8 @@ function showTrickMenu() {
 
 function startTickLoop() {
   stopTickLoop();
+  currentActivity = null;
+  if (activityTimer) { clearTimeout(activityTimer); activityTimer = null; }
   // Apply elapsed time on resume.
   if (lastTickTimestamp) {
     const elapsedSec = (Date.now() - lastTickTimestamp) / 1000;

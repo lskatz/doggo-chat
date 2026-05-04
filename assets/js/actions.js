@@ -95,7 +95,7 @@ export const ACTIONS = [
     icon: '💤',
     category: 'positive',
     effects: () => ({}), // handled via the asleep flag in stats.tick
-    available: (s) => s.stats.energy < 70,
+    available: (s) => !s.asleep && s.stats.energy < 70,
     reaction: () => 'Curls up. Soft snores.',
     setsAsleep: true,
   },
@@ -140,7 +140,7 @@ export const ACTIONS = [
     category: 'other',
     // The trick selector is handled separately in the UI; this entry is a placeholder.
     effects: () => ({ energy: -3 }),
-    available: (s) => (s.tricks?.length || 0) > 0 && s.stats.energy >= 15,
+    available: (s) => !s.asleep && (s.tricks?.length || 0) > 0 && s.stats.energy >= 15,
     reaction: () => null, // handled by trick handler
     isTrickMenu: true,
   },

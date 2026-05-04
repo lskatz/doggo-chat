@@ -35,6 +35,11 @@ const ACTIVITY_ANIMATION = {
 let currentActivity = null;
 let activityTimer = null;
 
+function clearActivityAnimation() {
+  if (activityTimer) { clearTimeout(activityTimer); activityTimer = null; }
+  currentActivity = null;
+}
+
 
 function showTitle() {
   stopTickLoop();
@@ -400,11 +405,11 @@ function onActionClick(actionId) {
   if (actionId === 'fetch') Sound.playMusic('music/play');
 
   // Set activity animation and clear it after the animation finishes.
-  if (activityTimer) clearTimeout(activityTimer);
+  clearActivityAnimation();
   currentActivity = ACTIVITY_ANIMATION[actionId] || null;
   if (currentActivity) {
     activityTimer = setTimeout(() => {
-      currentActivity = null;
+      clearActivityAnimation();
       renderScene();
     }, 2000);
   }
@@ -451,8 +456,7 @@ function showTrickMenu() {
 
 function startTickLoop() {
   stopTickLoop();
-  currentActivity = null;
-  if (activityTimer) { clearTimeout(activityTimer); activityTimer = null; }
+  clearActivityAnimation();
   // Apply elapsed time on resume.
   if (lastTickTimestamp) {
     const elapsedSec = (Date.now() - lastTickTimestamp) / 1000;

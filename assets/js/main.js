@@ -338,9 +338,9 @@ function renderStatsPanel() {
     let hint = '';
     if (name === 'energy') {
       if (state.asleep) {
-        hint = '<div class="stat-hint stat-hint-info">💤 Sleeping — energy is recharging…</div>';
+        hint = '<div class="stat-hint stat-hint-info" role="status">💤 Sleeping — energy is recharging…</div>';
       } else if (v < 70) {
-        hint = '<div class="stat-hint stat-hint-warn">💤 Click <strong>Sleep</strong> to recharge energy</div>';
+        hint = '<div class="stat-hint stat-hint-warn" role="status">💤 Click <strong>Sleep</strong> to recharge energy</div>';
       }
     }
     // For bladder, display as fullness (high = bad). For others, show as is.

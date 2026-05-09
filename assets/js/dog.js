@@ -191,6 +191,7 @@ function renderTail(cx, cy, scale, color, tailStyle, mood, asleep) {
   const dark = darken(color, 0.12);
   let path;
   if (tailStyle === 'curly') {
+    // Start at base, curve up-right then loop back over itself
     path = `M ${tx} ${ty} q 28 -22 6 -42 q -12 -12 12 -26`;
   } else if (tailStyle === 'bobbed') {
     return `
@@ -199,7 +200,7 @@ function renderTail(cx, cy, scale, color, tailStyle, mood, asleep) {
   } else if (tailStyle === 'docked') {
     return `<rect x="${tx}" y="${ty - 2}" width="${6*scale}" height="${10*scale}" rx="4" fill="${color}"/>`;
   } else {
-    // straight — slightly feathered
+    // straight — curves gently upward and back, giving a feathered look
     path = `M ${tx} ${ty} q 22 -22 28 -48`;
   }
   return `<path d="${path}" stroke="${dark}" stroke-width="${11*scale}" stroke-linecap="round" fill="none" class="${wag}"/>
@@ -505,12 +506,14 @@ export function renderDogScene(dog, { mood = 'okay', asleep = false, includeRoom
         .activity-wake { animation: activity-wake 0.9s ease-out 1 forwards; }
         @keyframes tail-wag { 0%, 100% { transform: rotate(-14deg); } 50% { transform: rotate(14deg); } }
         @keyframes sleep-breathe { 0%, 100% { transform: scaleY(1) translateY(0); } 50% { transform: scaleY(1.02) translateY(-3px); } }
+        /* Walk distance scales with the dog so small dogs take shorter strides
+           than large dogs and the animation feels proportional. */
         @keyframes dog-walk {
-          0%   { transform: translateX(-35px) translateY(0px); }
-          25%  { transform: translateX(-17px) translateY(-4px); }
-          50%  { transform: translateX(0px)   translateY(0px); }
-          75%  { transform: translateX(17px)  translateY(-4px); }
-          100% { transform: translateX(35px)  translateY(0px); }
+          0%   { transform: translateX(${-30 * scale}px) translateY(0px); }
+          25%  { transform: translateX(${-15 * scale}px) translateY(${-4 * scale}px); }
+          50%  { transform: translateX(0px)              translateY(0px); }
+          75%  { transform: translateX(${15 * scale}px)  translateY(${-4 * scale}px); }
+          100% { transform: translateX(${30 * scale}px)  translateY(0px); }
         }
         @keyframes activity-fetch { 0%, 100% { transform: translateX(0) rotate(0deg); } 25% { transform: translateX(-8px) rotate(-5deg); } 75% { transform: translateX(8px) rotate(5deg); } }
         @keyframes activity-eat { 0%, 100% { transform: translateY(0); } 35% { transform: translateY(5px); } 65% { transform: translateY(2px); } }

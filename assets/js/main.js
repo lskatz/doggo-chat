@@ -335,9 +335,14 @@ function renderStatsPanel() {
     const meta = Stats.STAT_META[name];
     const v = Math.round(state.stats[name]);
     const cls = Stats.classify(name, v);
-    const hint = (name === 'energy' && v < 40 && !state.asleep)
-      ? '<div class="stat-hint">💤 Use Sleep to recharge</div>'
-      : '';
+    let hint = '';
+    if (name === 'energy') {
+      if (state.asleep) {
+        hint = '<div class="stat-hint stat-hint-info" role="status">💤 Sleeping — energy is recharging…</div>';
+      } else if (v < 70) {
+        hint = '<div class="stat-hint stat-hint-warn" role="status">💤 Click <strong>Sleep</strong> to recharge energy</div>';
+      }
+    }
     // For bladder, display as fullness (high = bad). For others, show as is.
     return `
       <div class="stat" data-stat="${name}">
@@ -470,6 +475,7 @@ function startTickLoop() {
     const elapsedSec = (now - lastTickTimestamp) / 1000;
     state.stats = Stats.tick(state.stats, elapsedSec, state.personality, state.asleep);
     maybeAccident();
+    maybeAutoWake();
     lastTickTimestamp = now;
     renderStatsPanel();
     renderScene(); // refresh mood
@@ -490,6 +496,16 @@ function maybeAccident() {
     state.stats.bladder = 5;
     state.lastReaction = 'Oh no... an accident!';
     Sound.playSfx('whine');
+  }
+}
+
+function maybeAutoWake() {
+  // Automatically wake the dog when fully rested.
+  if (state.asleep && state.stats.energy >= 100) {
+    state.asleep = false;
+    state.lastReaction = 'Stretches and yawns — fully rested!';
+    Sound.playMusic('music/idle');
+    renderActions();
   }
 }
 

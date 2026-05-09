@@ -341,6 +341,12 @@ button {
   color: var(--ink-soft);
   font-weight: 600;
 }
+.stat-hint-warn {
+  color: var(--tomato);
+}
+.stat-hint-info {
+  color: var(--moss);
+}
 
 /* The bladder bar inverts: full means urgency. Use a different warning style. */
 .stat[data-stat="bladder"] .stat-fill {

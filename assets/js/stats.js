@@ -19,7 +19,7 @@ const BASE_RATES = {
   energy:  -8,    // -8/hour while awake
 };
 
-const ENERGY_REGEN_ASLEEP = +30; // per hour while sleeping
+const ENERGY_REGEN_ASLEEP = +60; // per hour while sleeping
 
 export function getDecayRates(personalityId) {
   const personality = DOGGO_DATA.personalities.find(p => p.id === personalityId);

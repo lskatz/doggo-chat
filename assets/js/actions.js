@@ -59,7 +59,7 @@ export const ACTIONS = [
     icon: '🌳',
     category: 'positive',
     effects: () => ({ bladder: -90, energy: -5 }),
-    available: (s) => s.stats.bladder >= 25,
+    available: (s) => !s.asleep && s.stats.bladder >= 25,
     reaction: () => 'Aaaah, much better!',
   },
   {
@@ -68,7 +68,7 @@ export const ACTIONS = [
     icon: '🪮',
     category: 'positive',
     effects: () => ({ energy: -3 }),
-    available: () => true,
+    available: (s) => !s.asleep,
     reaction: () => 'Mmmm, that feels good.',
   },
   {
@@ -86,7 +86,7 @@ export const ACTIONS = [
     icon: '🎾',
     category: 'positive',
     effects: () => ({ energy: -15, hunger: -5, thirst: -5 }),
-    available: (s) => s.stats.energy >= 25,
+    available: (s) => !s.asleep && s.stats.energy >= 25,
     reaction: () => '*sprints after the ball*',
   },
   {

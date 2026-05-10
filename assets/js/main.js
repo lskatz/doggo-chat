@@ -18,6 +18,8 @@ let state = null;
 
 let lastTickTimestamp = null;
 let tickInterval = null;
+const SLEEP_TICK_MS = 1000;
+const AWAKE_TICK_MS = 30 * 1000;
 
 const root = () => document.getElementById('screen-root');
 
@@ -466,7 +468,6 @@ function showTrickMenu() {
 function startTickLoop() {
   stopTickLoop();
   clearActivityAnimation();
-  const tickMs = state?.asleep ? 1000 : 30 * 1000;
   // Apply elapsed time on resume.
   if (lastTickTimestamp) {
     const elapsedSec = (Date.now() - lastTickTimestamp) / 1000;
@@ -475,30 +476,48 @@ function startTickLoop() {
     lastTickTimestamp = Date.now();
     renderPlayScreen();
   }
-  tickInterval = setInterval(() => {
-    const now = Date.now();
-    const elapsedSec = (now - lastTickTimestamp) / 1000;
-    const prevMood = Stats.moodFrom(state.stats);
-    const prevAsleep = state.asleep;
-    const prevReaction = String(state.lastReaction ?? '');
-    state.stats = Stats.tick(state.stats, elapsedSec, state.personality, state.asleep);
-    maybeAccident();
-    maybeAutoWake();
-    lastTickTimestamp = now;
-    renderStatsPanel();
-    const nextMood = Stats.moodFrom(state.stats);
-    if (nextMood !== prevMood || state.asleep !== prevAsleep || String(state.lastReaction ?? '') !== prevReaction) {
-      renderScene(); // refresh mood/scene only when something visible changes
-    }
-    if (state.asleep !== prevAsleep) setTimeout(() => startTickLoop(), 0);
-  }, tickMs);
+  scheduleNextTick();
 }
 
 function stopTickLoop() {
   if (tickInterval) {
-    clearInterval(tickInterval);
+    clearTimeout(tickInterval);
     tickInterval = null;
   }
+}
+
+function getTickDelayMs() {
+  return state?.asleep ? SLEEP_TICK_MS : AWAKE_TICK_MS;
+}
+
+function normalizedReaction() {
+  return String(state?.lastReaction ?? '');
+}
+
+function scheduleNextTick() {
+  tickInterval = setTimeout(runTick, getTickDelayMs());
+}
+
+function runTick() {
+  const now = Date.now();
+  const elapsedSec = (now - lastTickTimestamp) / 1000;
+  const prevMood = Stats.moodFrom(state.stats);
+  const prevAsleep = state.asleep;
+  const prevReaction = normalizedReaction();
+  state.stats = Stats.tick(state.stats, elapsedSec, state.personality, state.asleep);
+  maybeAccident();
+  maybeAutoWake();
+  lastTickTimestamp = now;
+  renderStatsPanel();
+  const nextMood = Stats.moodFrom(state.stats);
+  if (nextMood !== prevMood || state.asleep !== prevAsleep || normalizedReaction() !== prevReaction) {
+    renderScene(); // refresh mood/scene only when something visible changes
+  }
+  if (state.asleep !== prevAsleep) {
+    startTickLoop();
+    return;
+  }
+  scheduleNextTick();
 }
 
 function maybeAccident() {

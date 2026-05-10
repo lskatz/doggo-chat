@@ -5,6 +5,7 @@
 
 import DOGGO_DATA from './data.js';
 import * as Save from './save.js';
+import { CURRENT_VERSION } from './save.js';
 import * as Stats from './stats.js';
 import * as Sound from './sound.js';
 import { ACTIONS, ACTIONS_BY_ID, CATEGORIES, actionsByCategory, applyAction } from './actions.js';
@@ -48,6 +49,7 @@ function showTitle() {
       <div class="title-art">🐕</div>
       <h1>Doggo Chat</h1>
       <p class="subtitle">Adopt a dog. Care for a friend.</p>
+      <p class="subtitle">Version ${CURRENT_VERSION}</p>
       <div class="menu">
         <button class="btn btn-primary" id="btn-new">New Dog</button>
         <button class="btn btn-secondary" id="btn-load">Load Save</button>

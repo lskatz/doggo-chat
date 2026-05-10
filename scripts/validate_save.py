@@ -13,7 +13,7 @@ import re
 from dataclasses import dataclass, field
 from typing import Any, Callable
 
-CURRENT_VERSION = "1.0.0"
+CURRENT_VERSION = "1.1.0"
 
 _SEMVER_RE = re.compile(r"^(\d+)\.(\d+)\.(\d+)$")
 

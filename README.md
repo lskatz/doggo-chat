@@ -100,7 +100,7 @@ and `assets/js/save.js` (JS). Both share these rules:
 - **Same MAJOR version** → migratable (or pass-through if no changes).
 - **Different MAJOR version** → rejected with a clear user-facing message.
 
-Current version: `1.0.0`. To bump the schema later, register a migration in
+Current version: `1.1.0`. To bump the schema later, register a migration in
 both `validate_save.py::MIGRATIONS` and `save.js`. Tests in
 `tests/test_validate_save.py` cover the migration framework.
 

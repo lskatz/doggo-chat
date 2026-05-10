@@ -480,17 +480,17 @@ function startTickLoop() {
     const elapsedSec = (now - lastTickTimestamp) / 1000;
     const prevMood = Stats.moodFrom(state.stats);
     const prevAsleep = state.asleep;
-    const prevReaction = state.lastReaction;
+    const prevReaction = String(state.lastReaction ?? '');
     state.stats = Stats.tick(state.stats, elapsedSec, state.personality, state.asleep);
     maybeAccident();
     maybeAutoWake();
     lastTickTimestamp = now;
     renderStatsPanel();
     const nextMood = Stats.moodFrom(state.stats);
-    if (nextMood !== prevMood || state.asleep !== prevAsleep || state.lastReaction !== prevReaction) {
+    if (nextMood !== prevMood || state.asleep !== prevAsleep || String(state.lastReaction ?? '') !== prevReaction) {
       renderScene(); // refresh mood/scene only when something visible changes
     }
-    if (state.asleep !== prevAsleep) startTickLoop();
+    if (state.asleep !== prevAsleep) setTimeout(() => startTickLoop(), 0);
   }, tickMs);
 }
 

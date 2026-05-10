@@ -403,9 +403,11 @@ function onActionClick(actionId) {
     showTrickMenu();
     return;
   }
+  const wasAsleep = state.asleep;
   const { newState, reaction, blocked } = applyAction(state, actionId);
   if (blocked) return;
   state = { ...newState, lastReaction: reaction };
+  if (state.asleep !== wasAsleep) startTickLoop();
   Sound.playSfx(Sound.ACTION_SFX[actionId]);
   if (action.setsAsleep) Sound.playMusic('music/sleep');
   if (action.clearsAsleep) Sound.playMusic('music/idle');
@@ -464,6 +466,7 @@ function showTrickMenu() {
 function startTickLoop() {
   stopTickLoop();
   clearActivityAnimation();
+  const tickMs = state?.asleep ? 1000 : 30 * 1000;
   // Apply elapsed time on resume.
   if (lastTickTimestamp) {
     const elapsedSec = (Date.now() - lastTickTimestamp) / 1000;
@@ -487,7 +490,8 @@ function startTickLoop() {
     if (nextMood !== prevMood || state.asleep !== prevAsleep || state.lastReaction !== prevReaction) {
       renderScene(); // refresh mood/scene only when something visible changes
     }
-  }, 1000); // every 1s of wall time
+    if (state.asleep !== prevAsleep) startTickLoop();
+  }, tickMs);
 }
 
 function stopTickLoop() {

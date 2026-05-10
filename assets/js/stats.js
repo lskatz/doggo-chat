@@ -19,7 +19,7 @@ const BASE_RATES = {
   energy:  -8,    // -8/hour while awake
 };
 
-const ENERGY_REGEN_ASLEEP = +3600; // per hour while sleeping
+const ENERGY_REGEN_ASLEEP_PER_SECOND = 1;
 
 export function getDecayRates(personalityId) {
   const personality = DOGGO_DATA.personalities.find(p => p.id === personalityId);
@@ -43,7 +43,7 @@ export function tick(stats, elapsedSeconds, personalityId, asleep = false) {
     hunger:  stats.hunger  + rates.hunger  * hours,
     thirst:  stats.thirst  + rates.thirst  * hours,
     bladder: stats.bladder + rates.bladder * hours,
-    energy:  stats.energy  + (asleep ? ENERGY_REGEN_ASLEEP : rates.energy) * hours,
+    energy:  stats.energy  + (asleep ? ENERGY_REGEN_ASLEEP_PER_SECOND * elapsedSeconds : rates.energy * hours),
   };
   return clampAll(next);
 }

@@ -510,11 +510,12 @@ function runTick() {
   lastTickTimestamp = now;
   renderStatsPanel();
   const nextMood = Stats.moodFrom(state.stats);
-  if (nextMood !== prevMood || state.asleep !== prevAsleep || normalizedReaction() !== prevReaction) {
+  const nextReaction = normalizedReaction();
+  if (nextMood !== prevMood || state.asleep !== prevAsleep || nextReaction !== prevReaction) {
     renderScene(); // refresh mood/scene only when something visible changes
   }
   if (state.asleep !== prevAsleep) {
-    startTickLoop();
+    scheduleNextTick();
     return;
   }
   scheduleNextTick();

@@ -481,7 +481,7 @@ function startTickLoop() {
     lastTickTimestamp = now;
     renderStatsPanel();
     renderScene(); // refresh mood
-  }, 30 * 1000); // every 30s of wall time
+  }, 1000); // every 1s of wall time
 }
 
 function stopTickLoop() {

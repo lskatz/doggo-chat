@@ -475,12 +475,18 @@ function startTickLoop() {
   tickInterval = setInterval(() => {
     const now = Date.now();
     const elapsedSec = (now - lastTickTimestamp) / 1000;
+    const prevMood = Stats.moodFrom(state.stats);
+    const prevAsleep = state.asleep;
+    const prevReaction = state.lastReaction;
     state.stats = Stats.tick(state.stats, elapsedSec, state.personality, state.asleep);
     maybeAccident();
     maybeAutoWake();
     lastTickTimestamp = now;
     renderStatsPanel();
-    renderScene(); // refresh mood
+    const nextMood = Stats.moodFrom(state.stats);
+    if (nextMood !== prevMood || state.asleep !== prevAsleep || state.lastReaction !== prevReaction) {
+      renderScene(); // refresh mood/scene only when something visible changes
+    }
   }, 1000); // every 1s of wall time
 }
 
